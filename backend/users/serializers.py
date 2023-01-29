@@ -32,7 +32,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    is_follows = serializers.SerializerMethodField(read_only=True)
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -45,7 +45,7 @@ class CustomUserSerializer(UserSerializer):
             'is_subscribed',
         )
 
-    def is_subscribed(self, obj):
+    def get_is_subscribed(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
@@ -69,9 +69,9 @@ class FollowSerializer(CustomUserSerializer):
     class Meta:
         model = User
         fields = (
+            'email',
             'id',
             'username',
-            #'email',
             'first_name',
             'last_name',
             'is_subscribed',
@@ -86,7 +86,7 @@ class FollowSerializer(CustomUserSerializer):
     def get_recipes(self, obj):
         request = self.context.get('request')
         recipes = obj.recipes.all()
-        recipes_limit = request.query_params.get('recipes_limit')
+        recipes_limit = int(request.query_params.get('recipes_limit'))
         if recipes_limit:
             recipes = recipes[:recipes_limit]
         return ShortRecipeSerializer(recipes, many=True).data

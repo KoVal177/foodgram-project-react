@@ -26,7 +26,7 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 
     def __str__(self) -> str:
-        return str(self.name)
+        return str(self.slug)
 
 class Ingredient(models.Model):
     name = models.CharField(

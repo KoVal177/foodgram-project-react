@@ -32,12 +32,14 @@ class TagsViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class IngredientsViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = IngredientSerializer
+    pagination_class = None
     filter_backends = [IngredientSearchFilter]
     search_fields = ('^name',)
 
@@ -58,7 +60,7 @@ class RecipeViewSet(ModelViewSet):
     def post_method_for_actions(request, pk, serializers):
         data = {'user': request.user.id, 'recipe': pk}
         serializer = serializers(data=data, context={'request': request})
-        serializer.is_valid(raise_exeption=True)
+        serializer.is_valid()
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -102,20 +104,25 @@ class RecipeViewSet(ModelViewSet):
             methods=['GET'],
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
-        font_name = 'Handicraft'
+        FONT_NAME = 'Handicraft'
+        FONT_SIZE_HEADER = 24
+        FONT_SIZE_ROW = 16
+        HEADER_HORIZONTAL_POS = 200
+        HEADER_VERTICAL_POS = 800
+        ROW_HORIZONTAL_POS = 75
+        ROW_VERTICAL_POS_START = 750
+        ROWS_SPACING = 25
+        HEADER = 'Список покупок'
         final_list = {}
         ingredients = IngredientAmount.objects.filter(
-            recipe__carts__user=request.user
+            recipe__shopping_cart__user=request.user
         ).values_list(
                 'ingredient__name',
                 'ingredient__measurement_unit',
                 'amount'
         )
-        for ing in ingredients:
-            name = ing[0]
-            measurement_unit = ing[1]
-            amount = ing[2]
-            if ing['name'] in final_list:
+        for (name, measurement_unit, amount) in ingredients:
+            if name in final_list:
                 final_list[name]['amount'] += amount
             else:
                 final_list[name] = {
@@ -123,23 +130,26 @@ class RecipeViewSet(ModelViewSet):
                     'amount': amount
                 }
         pdfmetrics.registerFont(
-            TTFont(font_name, 'data/' + font_name, 'UTF-8'))
+            TTFont(FONT_NAME, f'data/{FONT_NAME}.ttf', 'UTF-8'))
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = ('attachment; '
                                            'filename="shopping_list.pdf"')
         page = canvas.Canvas(response)
-        page.setFont(font_name, size=24)
-        page.drawString(200, 800, 'Список покупок')
-        page.setFont(font_name, size=16)
-        height = 750
+        page.setFont(FONT_NAME, size=FONT_SIZE_HEADER)
+        page.drawString(HEADER_HORIZONTAL_POS,
+                        HEADER_VERTICAL_POS,
+                        HEADER)
+        page.setFont(FONT_NAME, size=FONT_SIZE_ROW)
+        height = ROW_VERTICAL_POS_START
         for i, (name, data) in enumerate(final_list.items(), 1):
             page.drawString(
-                75, 
+                ROW_HORIZONTAL_POS, 
                 height,
                 '{}. {} - {} {}'.format(
                     i, name, data['amount'], data['measurement_unit']
                 )
             )
+            height -= ROWS_SPACING
         page.showPage()
         page.save()
         return response
