@@ -27,7 +27,7 @@ class Command(BaseCommand):
                     name, color, slug = row
                     Tag.objects.get_or_create(
                         name=name,
-                        color_code=color,
+                        color=color,
                         slug=slug,
                     )
         except FileNotFoundError:

@@ -10,8 +10,8 @@ class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
             'id',
+            'email',
             'username',
             'first_name',
             'last_name',
@@ -37,15 +37,15 @@ class CustomUserSerializer(UserSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
             'id',
+            'email',
             'username',
             'first_name',
             'last_name',
-            'is_subscribed',
+            'is_follows',
         )
 
-    def is_subscribed(self, obj):
+    def is_follows(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
@@ -70,11 +70,11 @@ class FollowSerializer(CustomUserSerializer):
         model = User
         fields = (
             'id',
+            'email',
             'username',
-            #'email',
             'first_name',
             'last_name',
-            'is_subscribed',
+            'is_follows',
             'recipes',
             'recipes_count',
         )

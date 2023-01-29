@@ -67,5 +67,5 @@ class FollowListView(ListAPIView):
     pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
-        return User.objects.filter(followed__user=self.request.user)
+        return User.objects.filter(following__user=self.request.user)
 

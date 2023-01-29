@@ -11,7 +11,7 @@ class Tag(models.Model):
         'Название тега',
         max_length=100,
     )
-    color = models.CharField(
+    color_code = models.CharField(
         'Цветовой HEX-код',
         max_length=7,
     )
@@ -67,7 +67,7 @@ class Recipe(models.Model):
         'Изображение',
         upload_to='recipes/',
     )
-    text = models.TextField(
+    description = models.TextField(
         'Описание рецепта',
     )
     ingredients = models.ManyToManyField(
@@ -76,12 +76,7 @@ class Recipe(models.Model):
         through='IngredientAmount',
         related_name='recipes',
     )
-    tags = models.ManyToManyField(
-        Tag,
-        verbose_name='Тэги',
-        related_name='recipes',
-    )
-    cooking_time = models.PositiveIntegerField(
+    cook_time = models.PositiveIntegerField(
         'Время приготовления',
         validators=(
             MinValueValidator(
@@ -92,7 +87,7 @@ class Recipe(models.Model):
     )
     pub_date = models.DateTimeField(
         'Дата публикации',
-        auto_now_add=True,
+        auto_add_now=True,
     )
 
     class Meta:

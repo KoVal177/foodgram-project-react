@@ -7,7 +7,6 @@ from django.db import models
 
 class CustomUserManager(BaseUserManager):
     def create_superuser(self,
-                         username,
                          email, 
                          first_name, 
                          last_name,
@@ -23,11 +22,10 @@ class CustomUserManager(BaseUserManager):
         if not other_fields.get('is_staff'):
             raise ValueError('Недостаточно прав')
 
-        return self.create_user(email, username, first_name, last_name,
+        return self.create_user(email, first_name, last_name,
                                 password, **other_fields)
 
     def create_user(self,
-                    username,
                     first_name,
                     last_name,
                     email,
@@ -39,7 +37,6 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(
             email=email,
-            username=username,
             first_name=first_name,
             last_name=last_name,
             **other_fields
@@ -69,19 +66,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=100,
     )
     is_acitve = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
-    def has_permission(self, permission, obj=None) -> bool:
-        return bool(self.is_superuser)
+    def has_permission(self, permission, obj=None) -> boolean:
+        return self.is_superuser
 
-    def has_module_permission(self, app_label) -> bool:
-        return bool(self.is_superuser)
+    def has_module_permission(self, app_label) -> boolean:
+        return self.is_superuser
 
     def get_fullname(self) -> str:
         return '{} {}'.format(self.first_name, self.last_name)
@@ -103,7 +100,7 @@ class Follow(models.Model):
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='followed',
+        related_name='following',
     )
 
     class Meta:
