@@ -51,6 +51,7 @@ class CustomUserSerializer(UserSerializer):
             return False
         return Follow.objects.filter(user=user, author=obj.id).exists()
 
+
 class ShortRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -61,6 +62,7 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
             'image',
             'cooking_time',
         )
+
 
 class FollowSerializer(CustomUserSerializer):
     recipes = serializers.SerializerMethodField(read_only=True)

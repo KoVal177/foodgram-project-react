@@ -6,6 +6,7 @@ from users.models import User
 MIN_COOKING_TIME_MINUTES = 1
 MIN_AMOUNT_INGREDIENT_UNITS = 0
 
+
 class Tag(models.Model):
     name = models.CharField(
         'Название тега',
@@ -27,6 +28,7 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return str(self.slug)
+
 
 class Ingredient(models.Model):
     name = models.CharField(
@@ -51,6 +53,7 @@ class Ingredient(models.Model):
 
     def __str__(self) -> str:
         return '{}, {}'.format(self.name, self.measurement_unit)
+
 
 class Recipe(models.Model):
     author = models.ForeignKey(
@@ -100,9 +103,9 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт',
         verbose_name_plural = 'Рецепты'
 
-
     def __str__(self) -> str:
         return str(self.name)
+
 
 class IngredientAmount(models.Model):
     recipe = models.ForeignKey(
@@ -122,8 +125,9 @@ class IngredientAmount(models.Model):
         validators=(
             MinValueValidator(
                 MIN_AMOUNT_INGREDIENT_UNITS,
-                message='Количество не может быть меньше {}.'
-                    .format(MIN_AMOUNT_INGREDIENT_UNITS)
+                message='Количество не может быть меньше {}.'.format(
+                    MIN_AMOUNT_INGREDIENT_UNITS
+                )
             ),
         ),
     )
@@ -137,6 +141,7 @@ class IngredientAmount(models.Model):
                 name='unique ingredient amount',
             ),
         ]
+
 
 class Favorites(models.Model):
     user = models.ForeignKey(
@@ -161,6 +166,7 @@ class Favorites(models.Model):
                 name='unique favorites',
             ),
         ]
+
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(

@@ -8,8 +8,8 @@ from django.db import models
 class CustomUserManager(BaseUserManager):
     def create_superuser(self,
                          username,
-                         email, 
-                         first_name, 
+                         email,
+                         first_name,
                          last_name,
                          password,
                          **other_fields):
@@ -48,6 +48,7 @@ class CustomUserManager(BaseUserManager):
         user.save()
 
         return user
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
@@ -91,6 +92,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return str(self.email)
+
 
 class Follow(models.Model):
     user = models.ForeignKey(

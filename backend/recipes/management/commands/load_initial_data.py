@@ -12,11 +12,11 @@ FILE_INGREDIENTS = 'ingredients.csv'
 
 
 class Command(BaseCommand):
-    
+
     def add_arguments(self, parser):
         parser.add_argument(
-            'datafiles', 
-            default=[FILE_TAGS, FILE_INGREDIENTS], 
+            'datafiles',
+            default=[FILE_TAGS, FILE_INGREDIENTS],
             nargs='?',
             type=list
         )

@@ -15,19 +15,17 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name', 'color', 'slug')
-        #read_only_fields = '__all__'
+
 
 class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
         fields = '__all__'
-        #read_only_fields = '__all__'
+
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='ingredient.id')
-    #id = serializers.PrimaryKeyRelatedField(source='ingredient',
-    #                                        read_only=True)
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
@@ -36,7 +34,6 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientAmount
         fields = ('id', 'name', 'measurement_unit', 'amount')
-        #read_only_fields = '__all__'
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
@@ -85,7 +82,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         queryset=Tag.objects.all(), many=True)
     ingredients = AddIngredientSerializer(many=True)
     author = CustomUserSerializer(read_only=True)
-    image=Base64ImageField()
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -122,10 +119,10 @@ class RecipeSerializer(serializers.ModelSerializer):
                 tag_list.add(tag)
 
         if int(data['cooking_time']) <= 0:
-                raise serializers.ValidationError(
-                    {'cooking_time'
-                     : 'Время приготовления должно быть больше нуля'}
-                )
+            raise serializers.ValidationError(
+                {'cooking_time':
+                 'Время приготовления должно быть больше нуля'}
+            )
         return data
 
     @staticmethod
@@ -172,7 +169,7 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Favorites
         fields = ('user', 'recipe')
@@ -181,8 +178,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        if Favorites.objects.filter(user=request.user, recipe=data['recipe']
-                                  ).exists():
+        if Favorites.objects.filter(
+            user=request.user, recipe=data['recipe']
+        ).exists():
             raise serializers.ValidationError(
                 {'status': 'Рецепт уже находится в избранном'}
             )

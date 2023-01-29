@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.serializers import serializers
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
@@ -143,7 +142,7 @@ class RecipeViewSet(ModelViewSet):
         height = ROW_VERTICAL_POS_START
         for i, (name, data) in enumerate(final_list.items(), 1):
             page.drawString(
-                ROW_HORIZONTAL_POS, 
+                ROW_HORIZONTAL_POS,
                 height,
                 '{}. {} - {} {}'.format(
                     i, name, data['amount'], data['measurement_unit']

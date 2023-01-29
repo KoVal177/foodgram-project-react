@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import(Favorites,
-                    Ingredient,
-                    IngredientAmount,
-                    Recipe,
-                    ShoppingCart,
-                    Tag)
+from .models import (Favorites,
+                     Ingredient,
+                     IngredientAmount,
+                     Recipe,
+                     ShoppingCart,
+                     Tag)
 
 
 @admin.register(Tag)
@@ -47,6 +47,7 @@ class RecipeAdmin(admin.ModelAdmin):
 class IngredientAmountAdmin(admin.ModelAdmin):
     list_display = ('id', 'ingredient', 'recipe', 'amount')
     empty_value_display = '-пусто-'
+
 
 @admin.register(Favorites)
 class FavoriteAdmin(admin.ModelAdmin):

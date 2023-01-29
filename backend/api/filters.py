@@ -9,7 +9,6 @@ class IngredientSearchFilter(SearchFilter):
 
 
 class RecipeFilter(FilterSet):
-    #tags = filters.AllValuesMultipleFilter(field_name='tags__slug')
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         queryset=Tag.objects.all(),
@@ -29,11 +28,9 @@ class RecipeFilter(FilterSet):
     def filter_is_favorited(self, queryset, name, value):
         if value:
             return queryset.filter(favorites__user=self.request.user)
-        #return queryset
         return Recipe.objects.all()
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
         if value:
             return queryset.filter(shopping_cart__user=self.request.user)
-        #return queryset
         return Recipe.objects.all()
