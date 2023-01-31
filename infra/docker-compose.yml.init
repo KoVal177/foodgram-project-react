@@ -5,23 +5,25 @@ services:
     image: postgres:13.0-alpine
     volumes:
       #- data_value:/var/lib/postgresql/data/
-      - data-value: /var/lib/postgresql/data/
+      - data_value:/var/lib/postgresql/data/
     env_file:
-      - ../backend/backend/.env
+      - ./.env
   
   foodgram-backend:
     #image: valiok123456/web:latest
-    image: python:3.8-slim 
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     expose:
       - 8000
     restart: always
     volumes:
-      - static_value: /app/backend_static/
-      - media_value: /app/backend_media/
+      - static_value:/app/backend_static/
+      - media_value:/app/backend_media/
     depends_on:
       - foodgram-db
     env_file:
-      - ../backend/backend/.env
+      - ./.env
 
   foodgram-frontend:
     build:
@@ -45,6 +47,6 @@ services:
       - foodgram-frontend
 
 volumes:
-  postgres_data:
+  data_value:
   static_value:
   media_value:

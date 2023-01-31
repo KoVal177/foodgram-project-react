@@ -4,3 +4,4 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 DB_HOST=
 DB_PORT=
+SECRET_KEY=django-insecure-gk2(fzo_@_azb&=$(0tyov3ldm$qm$clm*wb_a(fjrky%s&lyp
