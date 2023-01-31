@@ -4,6 +4,35 @@
 ### Запуск локальной копии сайта (приведены команды при работе в Ubuntu)
 * скопировать репозиторий и зайти в начальную папку проекта:  
 `git clone git@github.com:KoVal177/foodgram.git`  
-`cd foodgram`
+`cd foodgram`  
 
+* создать и запустить виртуальное окружение, установить необходимые для работы бэкенда пакеты:  
+`python -m venv venv`  
+`. venv/bin/acitvate`  
+`cd backend`  
+`pip install -r requirements.txt`  
 
+* заполнить параметры для доступа к базе данных бэкенда в файле `backend/.env` (файл-шаблон `env_empty` находится в той же папке)  
+
+* выполнить миграции и заполнить базу данных начальными данными (тэги и ингридиенты):
+`python manage.py migrate`  
+`python manage.py load_initial_data`  
+
+* запустить сервере через manage.py:  
+`python manage.py runserver`  
+
+или gunicorn:  
+`gunicorn backend.wsgi:application --bind 0:8000`  
+
+* перейти в папку frontend:  
+`cd ../frontend`  
+
+* установить зависимости для работы Node.js:  
+`npm i`
+
+* убедиться, что в файле `package.json` в параметре `proxy` корректно указан сервер, с которого раздается api бэкэнда (например, `http://localhost:8000/`)
+
+* запустить фронтэнд:
+`npm run start`
+
+Сайт будет доступен по адресу <localhost:3000>
