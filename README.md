@@ -3,8 +3,8 @@
 
 ### Запуск локальной копии сайта (приведены команды при работе в Ubuntu)
 * скопировать репозиторий и зайти в начальную папку проекта:  
-`git clone git@github.com:KoVal177/foodgram.git`  
-`cd foodgram`  
+`git clone git@github.com:KoVal177/foodgram-project-react.git`  
+`cd foodgram-project-react`  
 
 * создать и запустить виртуальное окружение, установить необходимые для работы бэкенда пакеты:  
 `python -m venv venv`  
