@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,7 +19,7 @@ from recipes.models import (Favorites,
                             Tag)
 from .filters import IngredientSearchFilter, RecipeFilter
 from .pagination import CustomPageNumberPagination
-from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAuthorOrAdmin
 from .serializers import (FavoriteSerializer,
                           IngredientSerializer,
                           RecipeListSerializer,
@@ -45,7 +46,7 @@ class IngredientsViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAuthorOrAdmin]
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
     pagination_class = CustomPageNumberPagination
@@ -112,22 +113,13 @@ class RecipeViewSet(ModelViewSet):
         ROW_VERTICAL_POS_START = 750
         ROWS_SPACING = 25
         HEADER = 'Список покупок'
-        final_list = {}
         ingredients = IngredientAmount.objects.filter(
             recipe__shopping_cart__user=request.user
-        ).values_list(
+        ).values(
                 'ingredient__name',
                 'ingredient__measurement_unit',
-                'amount'
-        )
-        for (name, measurement_unit, amount) in ingredients:
-            if name in final_list:
-                final_list[name]['amount'] += amount
-            else:
-                final_list[name] = {
-                    'measurement_unit': measurement_unit,
-                    'amount': amount
-                }
+        ).annotate(amount = Sum('amount'))
+
         pdfmetrics.registerFont(
             TTFont(FONT_NAME, f'data/{FONT_NAME}.ttf', 'UTF-8'))
         response = HttpResponse(content_type='application/pdf')
@@ -140,12 +132,15 @@ class RecipeViewSet(ModelViewSet):
                         HEADER)
         page.setFont(FONT_NAME, size=FONT_SIZE_ROW)
         height = ROW_VERTICAL_POS_START
-        for i, (name, data) in enumerate(final_list.items(), 1):
+        for i, data in enumerate(ingredients, 1):
             page.drawString(
                 ROW_HORIZONTAL_POS,
                 height,
                 '{}. {} - {} {}'.format(
-                    i, name, data['amount'], data['measurement_unit']
+                    i,
+                    data['ingredient__name'],
+                    data['amount'],
+                    data['ingredient__measurement_unit']
                 )
             )
             height -= ROWS_SPACING

@@ -4,7 +4,7 @@ from django.db import models
 from users.models import User
 
 MIN_COOKING_TIME_MINUTES = 1
-MIN_AMOUNT_INGREDIENT_UNITS = 0
+MIN_AMOUNT_INGREDIENT_UNITS = 1
 
 
 class Tag(models.Model):
@@ -84,7 +84,7 @@ class Recipe(models.Model):
         verbose_name='Тэги',
         related_name='recipes',
     )
-    cooking_time = models.PositiveIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=(
             MinValueValidator(
@@ -120,7 +120,7 @@ class IngredientAmount(models.Model):
         on_delete=models.CASCADE,
         related_name='amounts'
     )
-    amount = models.PositiveIntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество продукта',
         validators=(
             MinValueValidator(
@@ -173,7 +173,7 @@ class ShoppingCart(models.Model):
         User,
         verbose_name='Пользователь',
         on_delete=models.CASCADE,
-        related_name='shopping_cart_user',
+        related_name='shopping_cart',
     )
     recipe = models.ForeignKey(
         Recipe,
