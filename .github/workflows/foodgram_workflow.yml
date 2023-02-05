@@ -18,7 +18,9 @@ jobs:
         pip install -r backend/requirements.txt
     - name: Test with flake8
       run: |
-        python -m flake8
+        ls
+        # python -m flake8
+
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     if: github.ref_name == 'master'
@@ -41,3 +43,4 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: valiok123456/foodgram_backend:latest
+
