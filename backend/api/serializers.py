@@ -105,7 +105,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'tags': 'Необходимо выбрать хотя бы один тэг'}
             )
-        elif len(set(tags)) < len(tags):
+        if len(set(tags)) < len(tags):
             raise serializers.ValidationError(
                 {'tags': 'Тэги должны быть уникальными'}
             )
@@ -129,8 +129,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_tags(tags, recipe):
-        for tag in set(tags):
-            recipe.tags.add(tag)
+        recipe.tags.set(tags)
 
     def create(self, validated_data):
         author = self.context.get('request').user

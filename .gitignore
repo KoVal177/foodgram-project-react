@@ -1,5 +1,11 @@
 frontend/node_modules/
 
+# media folder
+# backend_media/
+
+# static folder
+backend_static/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
