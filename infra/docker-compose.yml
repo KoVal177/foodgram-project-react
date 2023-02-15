@@ -9,7 +9,7 @@ services:
       - ./.env
   
   foodgram-backend:
-    #    image: valiok123456/foodgram-backend:latest
+    image: valiok123456/foodgram-backend:latest
     expose:
       - 8000
     restart: always
@@ -29,7 +29,8 @@ services:
 #     - ../frontend/:/app/result_build/
 
   foodgram-nginx:
-    image: nginx:1.19.3
+    image: valiok123456/foodgram-nginx:latest
+      #image: nginx:1.19.3
     ports:
       - "80:80"
     volumes:
