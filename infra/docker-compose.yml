@@ -21,16 +21,16 @@ services:
     env_file:
       - ./.env
 
-#  foodgram-frontend:
+  foodgram-frontend:
 #   build:
 #     context: ../frontend
 #     dockerfile: Dockerfile
-#   volumes:
-#     - ../frontend/:/app/result_build/
+    volumes:
+      - ../frontend/:/app/result_build/
 
   foodgram-nginx:
-    image: valiok123456/foodgram-nginx:latest
-      #image: nginx:1.19.3
+    #image: valiok123456/foodgram-nginx:latest
+    image: nginx:1.19.3
     ports:
       - "80:80"
     volumes:
@@ -40,8 +40,8 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
     restart: always
-#    depends_on:
-#      - foodgram-frontend
+    depends_on:
+      - foodgram-frontend
 
 volumes:
   data_value:

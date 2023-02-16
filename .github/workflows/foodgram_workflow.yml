@@ -57,9 +57,9 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-nginx:latest
             sudo docker-compose stop
             sudo docker-compose rm -f foodgram-backend
+            cd infra
             rm .env
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
@@ -83,6 +83,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker-compose exec -T web python manage.py collectstatic --no-input
-            sudo docker-compose exec -T web python manage.py migrate
+            sudo docker-compose exec -T foodgram-backend python manage.py collectstatic --no-input
+            sudo docker-compose exec -T foodgram-backend python manage.py migrate
 
