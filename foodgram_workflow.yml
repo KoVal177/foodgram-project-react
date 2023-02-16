@@ -86,4 +86,5 @@ jobs:
             cd infra
             sudo docker-compose exec -T foodgram-backend python manage.py collectstatic --no-input
             sudo docker-compose exec -T foodgram-backend python manage.py migrate
+            sudo docker-compose exec -T foodgram-backend python manage.py load_initial_data
 
