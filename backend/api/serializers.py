@@ -69,6 +69,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
     class Meta:
         model = IngredientAmount
@@ -90,15 +91,20 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         ingredients = data['ingredients']
-        if len(set(ingredients)) < len(ingredients):
-            raise serializers.ValidationError(
-                {'ingredients': 'Ингредиенты должны быть уникальными'}
-            )
+        ingredients_set = set()
         for ing in ingredients:
+            if ing['id'] in ingredients_set:
+                raise serializers.ValidationError(
+                    {'ingredients': 'Ингредиенты должны быть уникальными'}
+                )
+            else:
+                ingredients_set.add(ing['id'])
+
             if int(ing['amount']) <= 0:
                 raise serializers.ValidationError(
                     {'amount': 'Количества продукта должно быть больше нуля'}
                 )
+        print(ingredients_set)
 
         tags = data['tags']
         if not tags:
